@@ -1,6 +1,8 @@
-package com.cherifcodes.myorchestra.model;
+package com.cherifcodes.myorchestra.model.instruments;
 
 import android.text.TextUtils;
+
+import com.cherifcodes.myorchestra.model.ModelConstants;
 
 public class InstrumentFactory {
 
@@ -10,12 +12,13 @@ public class InstrumentFactory {
      * @param section the section where the instrument belongs. Has to be either woodwinds, brasswinds,
      *                percussions, 1st violins, 2nd violins, viola, cellos or double basses
      *
-     * @return an Instrument instance if name and section are valid, null otherwise
+     * @return an Instrument instance if name and section are valid
+     * @throws IllegalArgumentException if name or sections is invalid
      */
     public static Instrument createInstrument(String name, String section) {
 
         if (!isValidSection(section) || !isValidName(name))
-            return null;
+            throw new IllegalArgumentException("Invalid instrument name or section");
 
         return new SimpleInstrument(name, section);
     }
@@ -30,7 +33,7 @@ public class InstrumentFactory {
             return false;
 
         // Ensure that section is in the list of valid sections
-        for (String str: ModelConstants.validSections) {
+        for (String str: ModelConstants.VALID_SECTIONS) {
             if (str.equals(section))
                 return true;
         }
