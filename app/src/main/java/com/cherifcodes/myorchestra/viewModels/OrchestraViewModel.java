@@ -19,7 +19,7 @@ public class OrchestraViewModel extends AndroidViewModel {
         liveOrchestra.setValue(new Orchestra());
 
         livePlayingStatus = new MutableLiveData<>();
-        this.setLivePlayingStatus("STOPPED"); // Initialize the playing status string
+        //this.setLivePlayingStatus("STOPPED"); // Initialize the playing status string
     }
 
     public void setLivePlayingStatus(String playingStatus) {

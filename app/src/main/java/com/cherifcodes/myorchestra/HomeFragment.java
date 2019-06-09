@@ -69,8 +69,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(@Nullable String s) {
                 orchestraPlayingStatus = s;
-                if (orchestraPlayingTv != null)
-                    orchestraPlayingTv.setText(orchestraPlayingStatus);
             }
         });
     }
@@ -82,11 +80,21 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View homeFragment = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Instantiate checkBoxes
+        // Instantiate Switch buttons
         stringsSwitchBtn = homeFragment.findViewById(R.id.chb_strings_enabled);
         brasswindsSwitchBtn = homeFragment.findViewById(R.id.chb_brasswinds_enabled);
         woodwindsSwitchBtn = homeFragment.findViewById(R.id.chb_woodwinds_enabled);
         percussionsSwitchBtn = homeFragment.findViewById(R.id.chb_percussions_enabled);
+
+        // Handle adding new instrument
+        Button addInstrumentBtn = homeFragment.findViewById(R.id.btn_addNewInstrument);
+        addInstrumentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getActivity(), R.id.host_fragment)
+                        .navigate(R.id.newInstrumentFragment);
+            }
+        });
 
         // Handle orchestra snapshot viewing
         Button orchestraSnapshotBtn = homeFragment.findViewById(R.id.btn_orchestra_snapshot);
@@ -233,7 +241,7 @@ public class HomeFragment extends Fragment {
         // Handle orchestra stopping
         Button stopOrchestraBtn = homeFragment.findViewById(R.id.btn_stopOrchestra);
         orchestraPlayingTv = homeFragment.findViewById(R.id.tv_orchestra_playing);
-        orchestraPlayingTv.setText(orchestraPlayingStatus);
+        //orchestraPlayingTv.setText(orchestraPlayingStatus);
         stopOrchestraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,7 +263,6 @@ public class HomeFragment extends Fragment {
         stringsSwitchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                System.out.println("Reached inside Strings Onchecked.");
                 if (isChecked && mOrchestra != null)
                     mOrchestra.enableStrings();
                 else if (mOrchestra != null)
@@ -269,7 +276,6 @@ public class HomeFragment extends Fragment {
         woodwindsSwitchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (isChecked && mOrchestra != null)
                    mOrchestra.enableWoodwinds();
                 else if (mOrchestra != null)
@@ -304,6 +310,7 @@ public class HomeFragment extends Fragment {
     private void playOrchestra() {
         mOrchestra.startOrchestra();
         mOrchestraViewModel.setLivePlayingStatus("PLAYING");
+        orchestraPlayingTv.setText(orchestraPlayingStatus); // Update TextView
     }
 
     private void stopOrchestra() {
@@ -316,6 +323,15 @@ public class HomeFragment extends Fragment {
         brasswindVolumeEt.setText(String.valueOf(currVolume));
         percussionVolumeEt.setText(String.valueOf(currVolume));
         mOrchestraViewModel.setLivePlayingStatus("STOPPED");
+        orchestraPlayingTv.setText(orchestraPlayingStatus); // Update TextView
+
+
+        //Turn off all the section buttons
+        stringsSwitchBtn.setChecked(false);
+        woodwindsSwitchBtn.setChecked(false);
+        brasswindsSwitchBtn.setChecked(false);
+        percussionsSwitchBtn.setChecked(false);
+
     }
 
     /////////////////////// Volume decrease helper methods //////
