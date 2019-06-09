@@ -3,7 +3,6 @@ package com.cherifcodes.myorchestra;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,11 +32,20 @@ public class HomeFragment extends Fragment {
     private OrchestraViewModel mOrchestraViewModel;
     private SnapshotViewModel mSnapshotViewModel;
 
-    EditText stringVolumeEt;
-    EditText woodwindVolumeEt;
-    EditText brasswindVolumeEt;
-    EditText percussionVolumeEt;
-    EditText orchestraVolumeEt;
+    private EditText stringVolumeEt;
+    private EditText woodwindVolumeEt;
+    private EditText brasswindVolumeEt;
+    private EditText percussionVolumeEt;
+    private EditText orchestraVolumeEt;
+
+    private TextView orchestraPlayingTv;
+    private String orchestraPlayingStatus;
+
+
+    private Switch stringsSwitchBtn;
+    private Switch woodwindsSwitchBtn;
+    private Switch brasswindsSwitchBtn;
+    private Switch percussionsSwitchBtn;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -54,13 +64,29 @@ public class HomeFragment extends Fragment {
                 mOrchestra = orchestra;
             }
         });
+
+        mOrchestraViewModel.getPlayingStatus().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                orchestraPlayingStatus = s;
+                if (orchestraPlayingTv != null)
+                    orchestraPlayingTv.setText(orchestraPlayingStatus);
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View homeFragment = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // Instantiate checkBoxes
+        stringsSwitchBtn = homeFragment.findViewById(R.id.chb_strings_enabled);
+        brasswindsSwitchBtn = homeFragment.findViewById(R.id.chb_brasswinds_enabled);
+        woodwindsSwitchBtn = homeFragment.findViewById(R.id.chb_woodwinds_enabled);
+        percussionsSwitchBtn = homeFragment.findViewById(R.id.chb_percussions_enabled);
 
         // Handle orchestra snapshot viewing
         Button orchestraSnapshotBtn = homeFragment.findViewById(R.id.btn_orchestra_snapshot);
@@ -107,6 +133,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        ///////////////////// Handle volume increases ///////////////
         // Handle strings up volume
         ImageButton stringUpVolumeBtn = homeFragment.findViewById(R.id.btn_upStringsVolume);
         stringVolumeEt = homeFragment.findViewById(R.id.et_stringsVolume);
@@ -149,14 +176,24 @@ public class HomeFragment extends Fragment {
 
         // Handle entire orchestra up volume
         ImageButton orchestraUpVolumeBtn = homeFragment.findViewById(R.id.btn_upOrchestraVolume);
-        orchestraVolumeEt = homeFragment.findViewById(R.id.btn_upOrchestraVolume);
+        orchestraVolumeEt = homeFragment.findViewById(R.id.et_orchestraVolume);
         orchestraUpVolumeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                increaseOrchestraVolume();
             }
         });
         //////////////// Handle volume decreases ///////////////////////////////////////
+
+        // Handle entire orchestra volume decrease
+        ImageButton orchestraDownVolumeBtn = homeFragment.findViewById(R.id.btn_downOrchestraVolume);
+        orchestraDownVolumeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                decreaseOrchestraVolume();
+            }
+        });
+
         // Handle strings volume decrease
         ImageButton stringsDownVolumeBtn = homeFragment.findViewById(R.id.btn_downStringsVolume);
         stringsDownVolumeBtn.setOnClickListener(new View.OnClickListener() {
@@ -193,10 +230,109 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Handle orchestra stopping
+        Button stopOrchestraBtn = homeFragment.findViewById(R.id.btn_stopOrchestra);
+        orchestraPlayingTv = homeFragment.findViewById(R.id.tv_orchestra_playing);
+        orchestraPlayingTv.setText(orchestraPlayingStatus);
+        stopOrchestraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopOrchestra();
+            }
+        });
 
+        // Handle orchestra playing
+        Button orchestraPlayingBtn = homeFragment.findViewById(R.id.btn_playOrchestra);
+        orchestraPlayingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playOrchestra();
+            }
+        });
+
+        /////////////// Handle section enabling //////////////////
+        // Handle strings section enabling
+        stringsSwitchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                System.out.println("Reached inside Strings Onchecked.");
+                if (isChecked && mOrchestra != null)
+                    mOrchestra.enableStrings();
+                else if (mOrchestra != null)
+                    mOrchestra.disableStrings();
+                else
+                    System.out.println("mOrchestra is null!!");
+            }
+        });
+
+        // Handle woodwinds section enabling
+        woodwindsSwitchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked && mOrchestra != null)
+                   mOrchestra.enableWoodwinds();
+                else if (mOrchestra != null)
+                    mOrchestra.disableWoodwinds();
+            }
+        });
+
+        // Handle brasswinds section enabling
+        brasswindsSwitchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked && mOrchestra != null)
+                    mOrchestra.enableBrasswinds();
+                else if (mOrchestra != null)
+                    mOrchestra.disableBrasswinds();
+            }
+        });
+
+        // Handle percussions section enabling
+        percussionsSwitchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked && mOrchestra != null)
+                   mOrchestra.enablePercussions();
+                else if (mOrchestra != null)
+                    mOrchestra.disablePercussions();
+            }
+        });
         return homeFragment;
     }
-    ///////////////////////
+
+    private void playOrchestra() {
+        mOrchestra.startOrchestra();
+        mOrchestraViewModel.setLivePlayingStatus("PLAYING");
+    }
+
+    private void stopOrchestra() {
+        mOrchestra.stopOrchestra();
+        mOrchestra.setOrchestraVolume(0);
+        int currVolume = mOrchestra.getOrchestraVolume();
+        orchestraVolumeEt.setText(String.valueOf(currVolume));
+        stringVolumeEt.setText(String.valueOf(currVolume));
+        woodwindVolumeEt.setText(String.valueOf(currVolume));
+        brasswindVolumeEt.setText(String.valueOf(currVolume));
+        percussionVolumeEt.setText(String.valueOf(currVolume));
+        mOrchestraViewModel.setLivePlayingStatus("STOPPED");
+    }
+
+    /////////////////////// Volume decrease helper methods //////
+
+    private void decreaseOrchestraVolume() {
+        int currVolume = mOrchestra.getOrchestraVolume();
+        if (canDecreaseVolume(currVolume))
+            currVolume--;
+        else
+            Toast.makeText(getContext(), "Min volume reached.", Toast.LENGTH_LONG).show();
+        mOrchestra.setOrchestraVolume(currVolume);
+        orchestraVolumeEt.setText(String.valueOf(currVolume));
+        stringVolumeEt.setText(String.valueOf(currVolume));
+        woodwindVolumeEt.setText(String.valueOf(currVolume));
+        brasswindVolumeEt.setText(String.valueOf(currVolume));
+        percussionVolumeEt.setText(String.valueOf(currVolume));
+    }
 
     private void decreasePercussionVolume() {
         int currVolume = mOrchestra.getPercussionsVolume();
@@ -206,6 +342,7 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Min volume reached.", Toast.LENGTH_LONG).show();
         mOrchestra.setPercussionsVolume(currVolume);
         percussionVolumeEt.setText(String.valueOf(currVolume));
+        orchestraVolumeEt.setText(""); // Hide the orchestra volume
     }
 
     private void decreaseBrasswindVolume() {
@@ -216,6 +353,7 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Min volume reached.", Toast.LENGTH_LONG).show();
         mOrchestra.setBrasswindsVolume(currVolume);
         brasswindVolumeEt.setText(String.valueOf(currVolume));
+        orchestraVolumeEt.setText(""); // Hide the orchestra volume
     }
 
     private void decreaseWoodwindVolume() {
@@ -226,6 +364,7 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Min volume reached.", Toast.LENGTH_LONG).show();
         mOrchestra.setWoodwindsVolume(currVolume);
         woodwindVolumeEt.setText(String.valueOf(currVolume));
+        orchestraVolumeEt.setText(""); // Hide the orchestra volume
     }
 
     private void decreaseStringVolume() {
@@ -236,9 +375,24 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Min volume reached.", Toast.LENGTH_LONG).show();
         mOrchestra.setStringsVolume(currVolume);
         stringVolumeEt.setText(String.valueOf(currVolume));
+        orchestraVolumeEt.setText(""); // Hide the orchestra volume
     }
 
-    //////////////////////
+    //////////////////////  Volume increase helper methods
+
+    private void increaseOrchestraVolume() {
+        int currVolume = mOrchestra.getOrchestraVolume();
+        if (canIncreaseVolume(currVolume))
+            currVolume++;
+        else
+            Toast.makeText(getContext(), "Max volume reached.", Toast.LENGTH_LONG).show();
+        mOrchestra.setOrchestraVolume(currVolume);
+        orchestraVolumeEt.setText(String.valueOf(currVolume));
+        stringVolumeEt.setText(String.valueOf(currVolume));
+        woodwindVolumeEt.setText(String.valueOf(currVolume));
+        brasswindVolumeEt.setText(String.valueOf(currVolume));
+        percussionVolumeEt.setText(String.valueOf(currVolume));
+    }
 
     private void increasePercussionVolume() {
         int currVolume = mOrchestra.getPercussionsVolume();
@@ -248,6 +402,7 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Max volume reached.", Toast.LENGTH_LONG).show();
         mOrchestra.setPercussionsVolume(currVolume);
         percussionVolumeEt.setText(String.valueOf(currVolume));
+        orchestraVolumeEt.setText(""); // Hide the orchestra volume
     }
 
     private void increaseBrasswindVolume() {
@@ -258,6 +413,7 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Max volume reached.", Toast.LENGTH_LONG).show();
         mOrchestra.setBrasswindsVolume(currVolume);
         brasswindVolumeEt.setText(String.valueOf(currVolume));
+        orchestraVolumeEt.setText(""); // Hide the orchestra volume
     }
 
     private void increaseWoodwindVolume() {
@@ -268,6 +424,7 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Max volume reached.", Toast.LENGTH_LONG).show();
         mOrchestra.setWoodwindsVolume(currVolume);
         woodwindVolumeEt.setText(String.valueOf(currVolume));
+        orchestraVolumeEt.setText(""); // Hide the orchestra volume
     }
 
     private void increaseStringVolume() {
@@ -278,6 +435,7 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Max volume reached.", Toast.LENGTH_LONG).show();
         mOrchestra.setStringsVolume(currVolume);
         stringVolumeEt.setText(String.valueOf(currVolume));
+        orchestraVolumeEt.setText(""); // Hide the orchestra volume
     }
 
     private boolean canDecreaseVolume(int currVolume) {
@@ -288,6 +446,7 @@ public class HomeFragment extends Fragment {
         return currVolume >= 0 && currVolume < 10;
     }
 
+    ////////////////////  Orchestra and section snapshot helper methods
     private void viewPercussionSnapshot() {
         mSnapshotViewModel.setSnapshot(mOrchestra.getPercussionSnapshot());
         Navigation.findNavController(getActivity(), R.id.host_fragment).navigate(R.id.snapshotFragment);
@@ -312,5 +471,4 @@ public class HomeFragment extends Fragment {
         mSnapshotViewModel.setSnapshot(mOrchestra.toString());
         Navigation.findNavController(getActivity(), R.id.host_fragment).navigate(R.id.snapshotFragment);
     }
-
 }

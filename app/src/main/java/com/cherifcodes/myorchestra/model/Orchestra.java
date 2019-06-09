@@ -159,7 +159,7 @@ public class Orchestra {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Welcome to the Garmin Orchestra!\n");
+        stringBuilder.append("Welcome to the G-Orchestra!\n");
         if (this.isPlaying())
             stringBuilder.append("<<< The orchestra is now PLAYING!>>>\n");
         else

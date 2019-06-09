@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HomeFragment">
-
-    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-</FrameLayout>-->
 <ScrollView
 xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -48,7 +35,7 @@ tools:context=".HomeFragment">
             android:id="@+id/tv_orchestra_playing"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:text="STOPPED" />
@@ -121,19 +108,20 @@ tools:context=".HomeFragment">
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
             android:text="Strings"
             android:textStyle="bold"/>
 
-        <CheckBox
+        <Switch
             android:id="@+id/chb_strings_enabled"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:gravity="center_vertical"
             android:layout_marginEnd="8dp"
-            android:text="OFF" />
+            android:textOff="OFF"
+            android:textOn="ON"
+            android:showText="true"/>
 
         <ImageButton
             android:id="@+id/btn_downStringsVolume"
@@ -180,19 +168,20 @@ tools:context=".HomeFragment">
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
             android:text="Woodwinds"
             android:textStyle="bold"/>
 
-        <CheckBox
+        <Switch
             android:id="@+id/chb_woodwinds_enabled"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:gravity="center_vertical"
             android:layout_marginEnd="8dp"
-            android:text="OFF" />
+            android:textOff="OFF"
+            android:textOn="ON"
+            android:showText="true"/>
 
         <ImageButton
             android:id="@+id/btn_downWoodwindsVolume"
@@ -238,19 +227,20 @@ tools:context=".HomeFragment">
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
             android:text="Brasswinds"
             android:textStyle="bold"/>
 
-        <CheckBox
+        <Switch
             android:id="@+id/chb_brasswinds_enabled"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:gravity="center_vertical"
             android:layout_marginEnd="8dp"
-            android:text="OFF" />
+            android:textOff="OFF"
+            android:textOn="ON"
+            android:showText="true"/>
 
         <ImageButton
             android:id="@+id/btn_downBrasswindsVolume"
@@ -296,19 +286,20 @@ tools:context=".HomeFragment">
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
             android:text="Percussions"
             android:textStyle="bold"/>
 
-        <CheckBox
+        <Switch
             android:id="@+id/chb_percussions_enabled"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:gravity="center_vertical"
             android:layout_marginEnd="8dp"
-            android:text="OFF" />
+            android:textOff="OFF"
+            android:textOn="ON"
+            android:showText="true"/>
 
         <ImageButton
             android:id="@+id/btn_downPercussionsVolume"
