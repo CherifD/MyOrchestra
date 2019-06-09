@@ -186,4 +186,20 @@ public class Orchestra {
     public String getPercussionSnapshot() {
         return percussions.toString();
     }
+
+    public int geStringsVolume() {
+        return strings.getSectionVolume();
+    }
+
+    public int getWoodwindsVolume() {
+        return woodwinds.getSectionVolume();
+    }
+
+    public int getBrasswindsVolume() {
+        return brasswinds.getSectionVolume();
+    }
+
+    public int getPercussionsVolume() {
+        return percussions.getSectionVolume();
+    }
 }
