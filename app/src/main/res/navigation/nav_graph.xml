@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.cherifcodes.myorchestra.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_snapshotFragment"
+            app:destination="@id/snapshotFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_newInstrumentFragment"
+            app:destination="@id/newInstrumentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/snapshotFragment"
+        android:name="com.cherifcodes.myorchestra.SnapshotFragment"
+        android:label="fragment_snapshot"
+        tools:layout="@layout/fragment_snapshot" />
+    <fragment
+        android:id="@+id/newInstrumentFragment"
+        android:name="com.cherifcodes.myorchestra.NewInstrumentFragment"
+        android:label="fragment_new_instrument"
+        tools:layout="@layout/fragment_new_instrument" />
+</navigation>

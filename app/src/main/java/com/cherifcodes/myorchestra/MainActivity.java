@@ -3,9 +3,11 @@ package com.cherifcodes.myorchestra;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.cherifcodes.myorchestra.model.Orchestra;
@@ -15,25 +17,16 @@ import com.cherifcodes.myorchestra.model.ModelConstants;
 import com.cherifcodes.myorchestra.model.sections.Section;
 import com.cherifcodes.myorchestra.model.sections.SectionFactory;
 import com.cherifcodes.myorchestra.viewModels.OrchestraViewModel;
+import com.cherifcodes.myorchestra.viewModels.SnapshotViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    private Orchestra mOrchestra;
-    private OrchestraViewModel mOrchestraViewModel;
+
+    private SnapshotViewModel mSnapshotViewModel;
     private TextView testing_tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        testing_tv = findViewById(R.id.tv_testing);
-
-        mOrchestraViewModel = ViewModelProviders.of(this).get(OrchestraViewModel.class);
-        mOrchestraViewModel.getOrchestra().observe(this, new Observer<Orchestra>() {
-            @Override
-            public void onChanged(@Nullable Orchestra orchestra) {
-                mOrchestra = orchestra;
-            }
-        });
     }
 
     @Override
@@ -48,4 +41,6 @@ public class MainActivity extends AppCompatActivity {
         mOrchestra.stopOrchestra();
         testing_tv.append(mOrchestra.toString());*/
     }
+
+
 }

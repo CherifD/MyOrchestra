@@ -170,4 +170,20 @@ public class Orchestra {
         stringBuilder.append(this.percussions.toString());
         return stringBuilder.toString();
     }
+
+    public String getStringSnapshot() {
+        return strings.toString();
+    }
+
+    public String getWoodwindSnapshot() {
+        return woodwinds.toString();
+    }
+
+    public String getBrasswindSnapshot() {
+        return brasswinds.toString();
+    }
+
+    public String getPercussionSnapshot() {
+        return percussions.toString();
+    }
 }

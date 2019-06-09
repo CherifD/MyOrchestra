@@ -10,6 +10,8 @@ import com.cherifcodes.myorchestra.model.Orchestra;
 
 public class OrchestraViewModel extends AndroidViewModel {
     MutableLiveData<Orchestra> liveOrchestra;
+
+    MutableLiveData<String> liveSnapshot = new MutableLiveData<>();
    /* MutableLiveData<Integer> liveOrchestraVolume;
     MutableLiveData<Integer> liveStringsVolume;
     MutableLiveData<Integer> liveWoodwindsVolume;
@@ -40,6 +42,13 @@ public class OrchestraViewModel extends AndroidViewModel {
         livePercussionsIsEnabled = new MutableLiveData<>();*/
     }
 
+    public void setLiveSnapshot(String snapshot) {
+        this.liveSnapshot.postValue(snapshot);
+    }
+
+    public LiveData<String> getLiveSnapshot() {
+        return this.liveSnapshot;
+    }
     /*public void setLiveOrchestraVolume(int liveOrchestraVolume) {
         this.liveOrchestraVolume.setValue(liveOrchestraVolume);
     }
