@@ -1,6 +1,7 @@
 package com.cherifcodes.myorchestra.model.sections;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.cherifcodes.myorchestra.model.ModelConstants;
 import com.cherifcodes.myorchestra.model.instruments.Instrument;
@@ -20,10 +21,6 @@ public abstract class Section {
         setInstrumentList(instrumentList);
     }
 
-    public Section(String sectionName) {
-        this(sectionName, null);
-    }
-
     private void setInstrumentList(List<Instrument> instrumentList) {
         if (instrumentList == null)
             this.instrumentList = new ArrayList<>();
@@ -35,13 +32,7 @@ public abstract class Section {
         if (TextUtils.isEmpty(sectionName))
             throw new IllegalArgumentException("Instrument section cannot be a null or empty string");
 
-        // Validate sectionName before setting it.
-        for (String section : ModelConstants.VALID_SECTIONS) {
-            if (section.equals(sectionName))
-                this.sectionName = sectionName;
-            return;
-        }
-        throw new IllegalArgumentException("Invalid section name.");
+        this.sectionName = sectionName;
     }
 
     public String getSectionName() {
@@ -51,7 +42,6 @@ public abstract class Section {
     public int getSectionVolume() {return this.sectionVolume;}
 
     public void setSectionVolume(int newVolumeLevel) {
-        this.validateInstrumentList();
         this.validateVolume(newVolumeLevel);
 
         this.sectionVolume = newVolumeLevel; // Update section volume
@@ -61,8 +51,11 @@ public abstract class Section {
         }
     }
 
-    private void setEnabled(boolean isEnabled) {
+    public void setEnabled(boolean isEnabled) {
         this.isEnabled = isEnabled;
+        for (Instrument instrument : instrumentList) {
+            instrument.setEnabled(this.isEnabled());
+        }
     }
 
     private boolean isEnabled() {
@@ -70,7 +63,6 @@ public abstract class Section {
     }
 
     public void setInstrumentVolume(int instrumentId, int newVolumeLevel) {
-        this.validateInstrumentList();
         this.validateVolume(newVolumeLevel);
 
         // Find instrument ID from the list and set its volume
@@ -91,8 +83,17 @@ public abstract class Section {
     public void addInstrument(Instrument newInstrument) {
         // Note: No need to check for null instrumentList since it should have been already
         // initialized in the constructor
-        if (!newInstrument.getInstrumentSection().equals(this.sectionName)) {
+
+        // Ensure that newInstrument is valid
+        if (newInstrument == null)
+            throw new IllegalArgumentException("Cannot add a null instrument to the list.");
+        if (newInstrument.getInstrumentSection().equals(this.getSectionName())) {
             this.instrumentList.add(newInstrument);
+            // Match the new instruments volume to its new section volume.
+            newInstrument.setVolumeLevel(this.getSectionVolume());
+            // Match the new instruments enabled state to that of its new section.
+            newInstrument.setEnabled(this.isEnabled);
+
         }
     }
 
@@ -116,16 +117,9 @@ public abstract class Section {
             throw new IllegalArgumentException("Volume level must be between 0 and 10 inclusive");
     }
 
-    /**
-     * Ensures that the instrumentList has at least one item in it.
-     */
-    private void validateInstrumentList() {
-        if (this.instrumentList == null || this.instrumentList.size() == 0)
-            throw new IllegalArgumentException("There are no instruments in the list");
-    }
-
     public String toString() {
         StringBuilder sectionStatus = new StringBuilder("**** The " + this.getSectionName());
+        sectionStatus.append(" section");
         if (this.instrumentList.size() > 0) {
             this.createOnOffVersionsOfToString(sectionStatus);
             sectionStatus.append(" -It contains the following instruments:\n");
@@ -135,7 +129,7 @@ public abstract class Section {
 
         } else { // instrumentList is null or has no elements
             this.createOnOffVersionsOfToString(sectionStatus);
-            sectionStatus.append(" - It has no instruments yet.");
+            sectionStatus.append(" -It has no instruments yet.");
         }
         sectionStatus.append("\n\n\n");
         return sectionStatus.toString();
@@ -152,6 +146,6 @@ public abstract class Section {
         else // The section is not enabled
             stringBuilder.append(" is OFF.\n");
 
-        stringBuilder.append(" -It's volume is set to: " + this.sectionVolume + "\n");
+        stringBuilder.append(" -It's volume is set to: " + this.getSectionVolume() + "\n");
     }
 }

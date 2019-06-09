@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import com.cherifcodes.myorchestra.model.ModelConstants;
 
+import java.util.Arrays;
+
 public abstract class Instrument {
     private static int idTracker;
     private int id;
@@ -28,15 +30,8 @@ public abstract class Instrument {
 
     private void setInstrumentSection(String instrumentSection) {
         if (TextUtils.isEmpty(instrumentSection))
-            throw new IllegalArgumentException("Instrument section cannot be null or empty string");
-
-        // Validate instrument section before setting it.
-        for (String sectionName : ModelConstants.VALID_SECTIONS) {
-            if (sectionName.equals(instrumentSection))
-                this.instrumentSection = instrumentSection;
-            return;
-        }
-        throw new IllegalArgumentException("Invalid section name.");
+            throw new IllegalArgumentException("Instrument section cannot be a null or empty string");
+        this.instrumentSection = instrumentSection;
     }
 
     public void setVolumeLevel(int newVolumeLevel) {
@@ -69,5 +64,24 @@ public abstract class Instrument {
         return this.isEnabled;
     }
 
-    public abstract String toString();
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("A ");
+        stringBuilder.append(getInstrumentName());
+        stringBuilder.append(" with ID: ");
+        stringBuilder.append(this.getInstrumentId());
+        if (this.isEnabled()) {
+            stringBuilder.append(" from the ");
+            stringBuilder.append(this.getInstrumentSection());
+            stringBuilder.append(" section that is playing at Volume: ");
+            stringBuilder.append(getVolumeLevel());
+            stringBuilder.append("\n");
+            return stringBuilder.toString();
+        }
+        stringBuilder.append(" and Volume: ");
+        stringBuilder.append(this.getVolumeLevel());
+        stringBuilder.append(" from the ");
+        stringBuilder.append(getInstrumentSection());
+        stringBuilder.append(" section, but that is not enabled yet.\n");
+        return stringBuilder.toString();
+    }
 }
