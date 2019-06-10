@@ -74,6 +74,13 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (orchestraPlayingStatus != null && orchestraPlayingTv != null)
+            orchestraPlayingTv.setText(orchestraPlayingStatus);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 

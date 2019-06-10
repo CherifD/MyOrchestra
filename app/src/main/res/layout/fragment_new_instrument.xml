@@ -1,55 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewInstrumentFragment">
 
-    <TextView
-        android:id="@+id/tv_newInstrumentHeader"
-        android:layout_width="240dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="88dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/new_instrument_header"
-        android:textSize="16sp"
-        android:textColor="@color/colorAccent"
-        />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/spin_newInstrumentSection"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/tv_newInstrumentHeader"
-        app:layout_constraintStart_toStartOf="@+id/tv_newInstrumentHeader"
-        app:layout_constraintTop_toBottomOf="@+id/tv_newInstrumentHeader"
-        android:layout_marginTop="100dp"/>
+        <TextView
+            android:id="@+id/tv_newInstrumentHeader"
+            android:layout_width="240dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="88dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/new_instrument_header"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/et_newInstrumentName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="@string/newInstrument_name_hint"
-        app:layout_constraintEnd_toEndOf="@+id/spin_newInstrumentSection"
-        app:layout_constraintStart_toStartOf="@+id/spin_newInstrumentSection"
-        app:layout_constraintTop_toBottomOf="@+id/spin_newInstrumentSection" />
+        <Spinner
+            android:id="@+id/spin_newInstrumentSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_newInstrumentHeader"
+            app:layout_constraintStart_toStartOf="@+id/tv_newInstrumentHeader"
+            app:layout_constraintTop_toBottomOf="@+id/tv_newInstrumentHeader" />
 
-    <Button
-        android:id="@+id/btn_newInstrumentSave"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/newInstrument_button_label"
-        app:layout_constraintEnd_toEndOf="@+id/et_newInstrumentName"
-        app:layout_constraintStart_toStartOf="@+id/et_newInstrumentName"
-        app:layout_constraintTop_toBottomOf="@+id/et_newInstrumentName" />
+        <EditText
+            android:id="@+id/et_newInstrumentName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:ems="10"
+            android:hint="@string/newInstrument_name_hint"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="@+id/spin_newInstrumentSection"
+            app:layout_constraintStart_toStartOf="@+id/spin_newInstrumentSection"
+            app:layout_constraintTop_toBottomOf="@+id/spin_newInstrumentSection" />
 
-</android.support.constraint.ConstraintLayout>
+        <Button
+            android:id="@+id/btn_newInstrumentSave"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/newInstrument_button_label"
+            app:layout_constraintEnd_toEndOf="@+id/et_newInstrumentName"
+            app:layout_constraintStart_toStartOf="@+id/et_newInstrumentName"
+            app:layout_constraintTop_toBottomOf="@+id/et_newInstrumentName" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
