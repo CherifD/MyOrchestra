@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.cherifcodes.myorchestra.model.ModelConstants;
 import com.cherifcodes.myorchestra.model.Orchestra;
 
 public class OrchestraViewModel extends AndroidViewModel {
@@ -17,9 +18,27 @@ public class OrchestraViewModel extends AndroidViewModel {
         super(application);
         liveOrchestra = new MutableLiveData<>();
         liveOrchestra.setValue(new Orchestra());
-
         livePlayingStatus = new MutableLiveData<>();
-        //this.setLivePlayingStatus("STOPPED"); // Initialize the playing status string
+    }
+
+    public boolean addInstrument(String newInstrumentName, String section) {
+        Orchestra orchestra = liveOrchestra.getValue();
+        if (section.equals(ModelConstants.STRINGS)) {
+            orchestra.addStringInstrument(newInstrumentName);
+            return true;
+        } else if (section.equals(ModelConstants.BRASSWINDS)) {
+            orchestra.addBrassInstrument(newInstrumentName);
+            return true;
+        }else if ((section.equals(ModelConstants.WOODWINDS))) {
+            orchestra.addWoodwindInstrument(newInstrumentName);
+            return true;
+        }else if (section.equals(ModelConstants.PERCUSSIONS)) {
+            orchestra.addPercussionInstrument(newInstrumentName);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     public void setLivePlayingStatus(String playingStatus) {

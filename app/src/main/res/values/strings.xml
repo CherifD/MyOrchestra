@@ -4,4 +4,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_instrument_header">Select a section, enter a name and click the button</string>
+    <string name="newInstrument_name_hint">Instrument Name</string>
+    <string name="newInstrument_button_label">Add a new instrument</string>
+
+    <string-array name="expense_categories_array">
+        <item>Select a section</item>
+        <item>Percussions</item>
+        <item>Brasswinds</item>
+        <item>Woodwinds</item>
+        <item>Strings</item>
+    </string-array>
 </resources>
