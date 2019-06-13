@@ -1,5 +1,7 @@
 package com.cherifcodes.myorchestra.model.instruments;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.PrimaryKey;
 import android.text.TextUtils;
 
 import com.cherifcodes.myorchestra.model.ModelConstants;
@@ -8,10 +10,16 @@ import java.util.Arrays;
 
 public abstract class Instrument {
     private static int idTracker;
+
+    @PrimaryKey(autoGenerate = false)
     private int id;
+    @ColumnInfo(name = "Instrument Name")
     private String instrumentName;
+    @ColumnInfo(name = "Section")
     private String instrumentSection;
+    @ColumnInfo(name = "Volume")
     private int volumeLevel;
+    @ColumnInfo(name = "Enable Status")
     private boolean isEnabled;
 
     public Instrument(String instrumentName, String instrumentSection, int volumeLevel) {
@@ -22,13 +30,13 @@ public abstract class Instrument {
         this.id = Instrument.idTracker;
     }
 
-    private void setInstrumentName(String instrumentName) {
+    public void setInstrumentName(String instrumentName) {
         if (TextUtils.isEmpty(instrumentName))
             throw new IllegalArgumentException("Invalid instrument name");
         this.instrumentName = instrumentName;
     }
 
-    private void setInstrumentSection(String instrumentSection) {
+    public void setInstrumentSection(String instrumentSection) {
         if (TextUtils.isEmpty(instrumentSection))
             throw new IllegalArgumentException("Instrument section cannot be a null or empty string");
         this.instrumentSection = instrumentSection;
