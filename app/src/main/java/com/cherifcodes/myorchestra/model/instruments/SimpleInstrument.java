@@ -1,6 +1,7 @@
 package com.cherifcodes.myorchestra.model.instruments;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 
 @Entity
 public class SimpleInstrument extends Instrument {
@@ -9,6 +10,7 @@ public class SimpleInstrument extends Instrument {
         super(instrumentName, instrumentSection, volumeLevel);
     }
 
+    @Ignore
     public SimpleInstrument(String instrumentName, String instrumentSection) {
         this(instrumentName, instrumentSection, 0);
     }

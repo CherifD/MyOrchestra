@@ -1,7 +1,6 @@
 package com.cherifcodes.myorchestra.model.sections;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.cherifcodes.myorchestra.model.ModelConstants;
 import com.cherifcodes.myorchestra.model.instruments.Instrument;
@@ -67,7 +66,7 @@ public abstract class Section {
 
         // Find instrument ID from the list and set its volume
         for (Instrument instrument : instrumentList) {
-            if (instrument.getInstrumentId() == instrumentId)
+            if (instrument.getId() == instrumentId)
                 instrument.setVolumeLevel(newVolumeLevel);
             return;
         }
@@ -105,7 +104,7 @@ public abstract class Section {
         // Note: this method would be more efficient if List<Instrument> is replaced with
         // HashMap<InstrumentId, Instrument>.
         for (int i = 0; i < this.instrumentList.size(); i++) {
-            if (this.instrumentList.get(i).getInstrumentId() == instrumentId) {
+            if (this.instrumentList.get(i).getId() == instrumentId) {
                 this.instrumentList.remove(i);
                 return;
             }

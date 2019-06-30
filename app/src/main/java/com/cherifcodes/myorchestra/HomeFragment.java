@@ -19,9 +19,14 @@ import android.widget.Toast;
 
 import androidx.navigation.Navigation;
 
+import com.cherifcodes.myorchestra.model.ModelConstants;
 import com.cherifcodes.myorchestra.model.Orchestra;
+import com.cherifcodes.myorchestra.model.instruments.Instrument;
+import com.cherifcodes.myorchestra.model.instruments.SimpleInstrument;
 import com.cherifcodes.myorchestra.viewModels.OrchestraViewModel;
 import com.cherifcodes.myorchestra.viewModels.SnapshotViewModel;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +36,8 @@ public class HomeFragment extends Fragment {
     private Orchestra mOrchestra;
     private OrchestraViewModel mOrchestraViewModel;
     private SnapshotViewModel mSnapshotViewModel;
+    private List<? extends Instrument> instrumentList;
+    private boolean resetApp;
 
     private EditText stringVolumeEt;
     private EditText woodwindVolumeEt;
@@ -64,6 +71,14 @@ public class HomeFragment extends Fragment {
                 mOrchestra = orchestra;
             }
         });
+        mOrchestraViewModel.getAllInstruments().observe(getActivity(), new Observer<List<SimpleInstrument>>() {
+            @Override
+            public void onChanged(@Nullable List<SimpleInstrument> instruments) {
+                instrumentList = instruments;
+                mOrchestra.setInstrumentList(instrumentList);
+                //stopOrchestra();
+            }
+        });
 
         mOrchestraViewModel.getPlayingStatus().observe(getActivity(), new Observer<String>() {
             @Override
@@ -78,6 +93,11 @@ public class HomeFragment extends Fragment {
         super.onResume();
         if (orchestraPlayingStatus != null && orchestraPlayingTv != null)
             orchestraPlayingTv.setText(orchestraPlayingStatus);
+
+        if (resetApp && mOrchestraViewModel != null) {
+            stopOrchestra();
+            mOrchestraViewModel.setResetAppStatus(false);
+        }
     }
 
     @Override
@@ -248,7 +268,6 @@ public class HomeFragment extends Fragment {
         // Handle orchestra stopping
         Button stopOrchestraBtn = homeFragment.findViewById(R.id.btn_stopOrchestra);
         orchestraPlayingTv = homeFragment.findViewById(R.id.tv_orchestra_playing);
-        //orchestraPlayingTv.setText(orchestraPlayingStatus);
         stopOrchestraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -311,12 +330,19 @@ public class HomeFragment extends Fragment {
                     mOrchestra.disablePercussions();
             }
         });
+
+        mOrchestraViewModel.getResetAppStatus().observe(getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                resetApp = aBoolean;
+            }
+        });
         return homeFragment;
     }
 
     private void playOrchestra() {
         mOrchestra.startOrchestra();
-        mOrchestraViewModel.setLivePlayingStatus("PLAYING");
+        mOrchestraViewModel.setLivePlayingStatus(ModelConstants.PLAYING);
         orchestraPlayingTv.setText(orchestraPlayingStatus); // Update TextView
     }
 
@@ -329,7 +355,7 @@ public class HomeFragment extends Fragment {
         woodwindVolumeEt.setText(String.valueOf(currVolume));
         brasswindVolumeEt.setText(String.valueOf(currVolume));
         percussionVolumeEt.setText(String.valueOf(currVolume));
-        mOrchestraViewModel.setLivePlayingStatus("STOPPED");
+        mOrchestraViewModel.setLivePlayingStatus(ModelConstants.STOPPED);
         orchestraPlayingTv.setText(orchestraPlayingStatus); // Update TextView
 
 

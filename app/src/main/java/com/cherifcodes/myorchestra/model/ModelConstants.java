@@ -5,6 +5,8 @@ public class ModelConstants {
     public static final String WOODWINDS = "Woodwinds";
     public static final String BRASSWINDS = "Brasswinds";
     public static final String PERCUSSIONS = "Percussions";
+    public static final String PLAYING = "PLAYING";
+    public static final String STOPPED = "STOPPED";
 
     public static final String[] VALID_SECTIONS = {STRINGS, WOODWINDS, BRASSWINDS, PERCUSSIONS};
 

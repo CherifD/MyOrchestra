@@ -67,17 +67,20 @@ public class NewInstrumentFragment extends Fragment {
     private void addNewInstrument() {
         String instrumentName = instrumentNameEt.getText().toString();
         String selectedSection = sectionSpinner.getSelectedItem().toString();
-        if(TextUtils.isEmpty(instrumentName)){
+        if (TextUtils.isEmpty(instrumentName)) {
             Toast.makeText(getContext(), "Please enter a name for the new instrument",
                     Toast.LENGTH_LONG).show();
             return;
 
             // Validate section and save instrument
-        } else if (!mOrchestraViewModel.addInstrument(instrumentName, selectedSection)) {
+        } else if (!mOrchestraViewModel.isValidSection(selectedSection)) {
             Toast.makeText(getContext(), "Please select an instrument section.",
                     Toast.LENGTH_LONG).show();
             return;
         }
+        mOrchestraViewModel.addInstrument(instrumentName, selectedSection);
+        mOrchestraViewModel.setResetAppStatus(true);
+
         Toast.makeText(getContext(), instrumentName + " was successfully added to " +
                 "the " + selectedSection + " section.", Toast.LENGTH_LONG).show();
         instrumentNameEt.setText("");

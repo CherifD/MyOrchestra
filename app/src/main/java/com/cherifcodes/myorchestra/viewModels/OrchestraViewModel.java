@@ -8,41 +8,64 @@ import android.support.annotation.NonNull;
 
 import com.cherifcodes.myorchestra.model.ModelConstants;
 import com.cherifcodes.myorchestra.model.Orchestra;
+import com.cherifcodes.myorchestra.model.database.Repository;
+import com.cherifcodes.myorchestra.model.instruments.InstrumentFactory;
+import com.cherifcodes.myorchestra.model.instruments.SimpleInstrument;
+
+import java.util.List;
 
 public class OrchestraViewModel extends AndroidViewModel {
     MutableLiveData<Orchestra> liveOrchestra;
-
+    Repository repository;
+    MutableLiveData<List<SimpleInstrument>> liveInstrumentList = new MutableLiveData<>();
     MutableLiveData<String> livePlayingStatus;
+    MutableLiveData<Boolean> resetAppStatus;
 
     public OrchestraViewModel(@NonNull Application application) {
         super(application);
+        repository = Repository.getInstance(application);
+
         liveOrchestra = new MutableLiveData<>();
-        liveOrchestra.setValue(new Orchestra());
+        liveOrchestra.setValue(new Orchestra(null));
+
+        liveInstrumentList.setValue(repository.getAllInstruments().getValue());
+
         livePlayingStatus = new MutableLiveData<>();
+        resetAppStatus = new MutableLiveData<>();
     }
 
-    public boolean addInstrument(String newInstrumentName, String section) {
-        Orchestra orchestra = liveOrchestra.getValue();
-        if (section.equals(ModelConstants.STRINGS)) {
-            orchestra.addStringInstrument(newInstrumentName);
-            return true;
-        } else if (section.equals(ModelConstants.BRASSWINDS)) {
-            orchestra.addBrassInstrument(newInstrumentName);
-            return true;
-        }else if ((section.equals(ModelConstants.WOODWINDS))) {
-            orchestra.addWoodwindInstrument(newInstrumentName);
-            return true;
-        }else if (section.equals(ModelConstants.PERCUSSIONS)) {
-            orchestra.addPercussionInstrument(newInstrumentName);
-            return true;
-        } else {
-            return false;
+    public void addInstrument(String newInstrumentName, String section) {
+        if (isValidSection(section)) {
+            repository.insertSimpleInstrument(
+                    InstrumentFactory.createInstrument(newInstrumentName, section));
+            // NOT efficient to reload the entire list!!
+            // Reset the orchestra and the playing status
+            liveOrchestra.getValue().setInstrumentList(repository.getAllInstruments().getValue());
+            livePlayingStatus.setValue(ModelConstants.STOPPED);
         }
+    }
 
+    public boolean isValidSection(String section) {
+        return section.equals(ModelConstants.STRINGS) ||
+                section.equals(ModelConstants.WOODWINDS) ||
+                section.equals(ModelConstants.BRASSWINDS) ||
+                section.equals(ModelConstants.PERCUSSIONS);
     }
 
     public void setLivePlayingStatus(String playingStatus) {
         this.livePlayingStatus.setValue(playingStatus);
+    }
+
+    public LiveData<Boolean> getResetAppStatus() {
+        return this.resetAppStatus;
+    }
+
+    public void setResetAppStatus(boolean resetAppStatus) {
+        this.resetAppStatus.setValue(resetAppStatus);
+    }
+
+    public LiveData<List<SimpleInstrument>> getAllInstruments() {
+        return repository.getAllInstruments();
     }
 
     public LiveData<String> getPlayingStatus() {

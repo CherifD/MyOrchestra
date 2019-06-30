@@ -1,10 +1,15 @@
 package com.cherifcodes.myorchestra.model;
 
-import com.cherifcodes.myorchestra.model.instruments.InstrumentFactory;
+import android.util.Log;
+
+import com.cherifcodes.myorchestra.model.instruments.Instrument;
 import com.cherifcodes.myorchestra.model.sections.Section;
 import com.cherifcodes.myorchestra.model.sections.SectionFactory;
 
+import java.util.List;
+
 public class Orchestra {
+    private List<? extends Instrument> instrumentList;
     private int orchestraVolume;
     private boolean isPlaying;
     private Section strings;
@@ -12,11 +17,28 @@ public class Orchestra {
     private Section percussions;
     private Section woodwinds;
 
-    public Orchestra() {
+    public Orchestra(List<? extends Instrument> instrumentList) {
+        this.instrumentList = instrumentList;
+        this.initSections();
+    }
+
+    public void initSections() {
         this.initStringsSection();
         this.initWoodwindsSection();
         this.initBrasswindsSection();
         this.initPercussionsSection();
+        if (this.instrumentList != null) {
+            for (Instrument instrument : this.instrumentList) {
+                this.addInstrument(instrument);
+            }
+        } else {
+            Log.i("Orchestra ", "!!!The Orchestra's instrument list is null!!!");
+        }
+    }
+
+    public void setInstrumentList(List<? extends Instrument> instrumentList) {
+        this.instrumentList = instrumentList;
+        this.initSections();
     }
 
     public void enableStrings() {
@@ -97,64 +119,68 @@ public class Orchestra {
         this.percussions.setSectionVolume(newVolumeLevel);
     }
 
-    public void addStringInstrument(String instrumentName) {
+    public void addInstrument(Instrument instrument) {
+        if (instrument == null)
+            throw new IllegalArgumentException("Instrument must not be null.");
+        if (instrument.getInstrumentSection().equals(ModelConstants.STRINGS)) {
+            this.strings.addInstrument(instrument);
+        } else if (instrument.getInstrumentSection().equals(ModelConstants.WOODWINDS)) {
+            this.woodwinds.addInstrument(instrument);
+        } else if (instrument.getInstrumentSection().equals(ModelConstants.BRASSWINDS)) {
+            this.brasswinds.addInstrument(instrument);
+        } else if (instrument.getInstrumentSection().equals(ModelConstants.PERCUSSIONS)) {
+            this.percussions.addInstrument(instrument);
+        } else {
+            throw new IllegalArgumentException("Invalid instrument section.");
+        }
+    }
+
+    /*public void addStringInstrument(Instrument instrument) {
+        this.strings.addInstrument(instrument);
+    }
+
+    public void addWoodwindInstrument(Instrument instrument) {
+        this.woodwinds.addInstrument(instrument);
+    }
+
+    public void addBrassInstrument(Instrument instrument) {
+        this.woodwinds.addInstrument(instrument);
+    }*/
+
+    /*public void addStringInstrument(String instrumentName) {
         this.strings.addInstrument(InstrumentFactory.createInstrument(instrumentName,
                 this.strings.getSectionName()));
-    }
+    }*/
 
-    public void addWoodwindInstrument(String instrumentName) {
+   /* public void addWoodwindInstrument(String instrumentName) {
         this.woodwinds.addInstrument(InstrumentFactory.createInstrument(instrumentName,
                 this.woodwinds.getSectionName()));
-    }
+    }*/
 
-    public void addBrassInstrument(String instrumentName) {
+    /*public void addBrassInstrument(String instrumentName) {
         this.brasswinds.addInstrument(
                 InstrumentFactory.createInstrument(instrumentName, this.brasswinds.getSectionName()));
-    }
+    }*/
 
-    public void addPercussionInstrument(String instrumentName) {
+   /* public void addPercussionInstrument(String instrumentName) {
         this.percussions.addInstrument(InstrumentFactory.createInstrument(instrumentName,
                 this.percussions.getSectionName()));
-    }
+    }*/
 
     private void initStringsSection() {
         strings = SectionFactory.createSection(ModelConstants.STRINGS);
-        addInstrumentsToSection(strings, "2nd violin", ModelConstants.INIT_NUM_2ND_VIOLINS);
-        addInstrumentsToSection(strings, "1st violins", ModelConstants.INIT_NUM_1ST_VIOLINS);
-        addInstrumentsToSection(strings, "viola", ModelConstants.INIT_NUM_VIOLAS);
-        addInstrumentsToSection(strings, "cello", ModelConstants.INIT_NUM_CELLOS);
-        addInstrumentsToSection(strings, "double bass", ModelConstants.INIT_NUM_DOUBLE_BASSES);
     }
 
     private void initWoodwindsSection() {
         woodwinds = SectionFactory.createSection(ModelConstants.WOODWINDS);
-        addInstrumentsToSection(woodwinds, "clarinet", ModelConstants.INIT_NUM_CLARINETS);
-        addInstrumentsToSection(woodwinds, "bassoon", ModelConstants.INIT_NUM_BASSOONS);
-        addInstrumentsToSection(woodwinds, "flute", ModelConstants.INIT_NUM_FLUTES);
-        addInstrumentsToSection(woodwinds, "oboe", ModelConstants.INIT_NUM_OBOES);
     }
 
     private void initBrasswindsSection() {
         brasswinds = SectionFactory.createSection(ModelConstants.BRASSWINDS);
-        addInstrumentsToSection(brasswinds, "trumpet", ModelConstants.INIT_NUM_TRUMPETS);
-        addInstrumentsToSection(brasswinds, "trombone", ModelConstants.INIT_NUM_TROMBONES);
-        addInstrumentsToSection(brasswinds, "tuba", ModelConstants.INIT_NUM_TUBAS);
-        addInstrumentsToSection(brasswinds, "French horn", ModelConstants.INIT_NUM_FRENCH_HORNS);
     }
 
     private void initPercussionsSection() {
         percussions = SectionFactory.createSection(ModelConstants.PERCUSSIONS);
-        addInstrumentsToSection(percussions, "snare", ModelConstants.INIT_NUM_SNARES);
-        addInstrumentsToSection(percussions, "bass drum", ModelConstants.INIT_NUM_BRASS_DRUMS);
-        addInstrumentsToSection(percussions, "timpani", ModelConstants.INIT_NUM_TIMPANIS);
-        addInstrumentsToSection(percussions, "piano", ModelConstants.INIT_NUM_PIANOS);
-    }
-
-    private void addInstrumentsToSection(Section sectionName, String instrumentName, int numInstruments) {
-        for (int i = 0; i < numInstruments; i++) {
-            sectionName.addInstrument(
-                    InstrumentFactory.createInstrument(instrumentName, sectionName.getSectionName()));
-        }
     }
 
     public String toString() {

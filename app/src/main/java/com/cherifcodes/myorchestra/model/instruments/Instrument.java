@@ -6,28 +6,21 @@ import android.text.TextUtils;
 
 import com.cherifcodes.myorchestra.model.ModelConstants;
 
-import java.util.Arrays;
-
 public abstract class Instrument {
-    private static int idTracker;
-
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     private int id;
-    @ColumnInfo(name = "Instrument Name")
+    @ColumnInfo(name = "Name")
     private String instrumentName;
     @ColumnInfo(name = "Section")
     private String instrumentSection;
-    @ColumnInfo(name = "Volume")
+
     private int volumeLevel;
-    @ColumnInfo(name = "Enable Status")
     private boolean isEnabled;
 
     public Instrument(String instrumentName, String instrumentSection, int volumeLevel) {
         setInstrumentName(instrumentName);
         setInstrumentSection(instrumentSection);
         setVolumeLevel(volumeLevel);
-        Instrument.idTracker++;
-        this.id = Instrument.idTracker;
     }
 
     public void setInstrumentName(String instrumentName) {
@@ -48,12 +41,16 @@ public abstract class Instrument {
         this.volumeLevel = newVolumeLevel;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     public int getVolumeLevel() {
         return this.volumeLevel;
     }
 
-    public int getInstrumentId() {
-        return this.id;
+    public void setId(int dbId) {
+        this.id = dbId;
     }
 
     public String getInstrumentName() {
@@ -76,7 +73,7 @@ public abstract class Instrument {
         StringBuilder stringBuilder = new StringBuilder("A ");
         stringBuilder.append(getInstrumentName());
         stringBuilder.append(" with ID: ");
-        stringBuilder.append(this.getInstrumentId());
+        stringBuilder.append(this.getId());
         if (this.isEnabled()) {
             stringBuilder.append(" from the ");
             stringBuilder.append(this.getInstrumentSection());
