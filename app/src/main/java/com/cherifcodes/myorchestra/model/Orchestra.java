@@ -135,38 +135,6 @@ public class Orchestra {
         }
     }
 
-    /*public void addStringInstrument(Instrument instrument) {
-        this.strings.addInstrument(instrument);
-    }
-
-    public void addWoodwindInstrument(Instrument instrument) {
-        this.woodwinds.addInstrument(instrument);
-    }
-
-    public void addBrassInstrument(Instrument instrument) {
-        this.woodwinds.addInstrument(instrument);
-    }*/
-
-    /*public void addStringInstrument(String instrumentName) {
-        this.strings.addInstrument(InstrumentFactory.createInstrument(instrumentName,
-                this.strings.getSectionName()));
-    }*/
-
-   /* public void addWoodwindInstrument(String instrumentName) {
-        this.woodwinds.addInstrument(InstrumentFactory.createInstrument(instrumentName,
-                this.woodwinds.getSectionName()));
-    }*/
-
-    /*public void addBrassInstrument(String instrumentName) {
-        this.brasswinds.addInstrument(
-                InstrumentFactory.createInstrument(instrumentName, this.brasswinds.getSectionName()));
-    }*/
-
-   /* public void addPercussionInstrument(String instrumentName) {
-        this.percussions.addInstrument(InstrumentFactory.createInstrument(instrumentName,
-                this.percussions.getSectionName()));
-    }*/
-
     private void initStringsSection() {
         strings = SectionFactory.createSection(ModelConstants.STRINGS);
     }
